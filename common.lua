@@ -7,12 +7,12 @@
 local textureNormal = "Interface\\AddOns\\RabbitCommon\\media\\textureNormal"
 local textureShadow = "Interface\\AddOns\\RabbitCommon\\media\\textureShadow"
 
-local function createBorder(self, size, r, g, b)
+local function createBorder(self, size)
 	local border = self:CreateTexture(nil, "BORDER")
 	border:SetTexture(textureNormal)
 	border:SetWidth(size)
 	border:SetHeight(size)
-	border:SetVertexColor(r or 1, g or 1, b or 1)
+	border:SetVertexColor(1, 1, 1)
 	return border
 end
 
@@ -28,24 +28,23 @@ end
 local borders = {}
 local shadows = {}
 
-function CreateBorder(self, borderSize, R, G, B, ...)
-	local uL1, uL2, uR1, uR2, bL1, bL2, bR1, bR2 = ...
-
+function CreateBorder(self, borderSize, padding)
+	if not padding then padding = 0 end
 	for i = 1, 8 do
-		local border = createBorder(self, borderSize, R, G, B)
+		local border = createBorder(self, borderSize)
 		borders[i] = border
 		if i == 1 then
 			border:SetTexCoord(0, 1/3, 0, 1/3) 
-			border:SetPoint("TOPLEFT", self, -(uL1 or 0), uL2 or 0)
+			border:SetPoint("TOPLEFT", -padding, padding)
 		elseif i == 2 then
 			border:SetTexCoord(2/3, 1, 0, 1/3)
-			border:SetPoint("TOPRIGHT", self, uR1 or 0, uR2 or 0)
+			border:SetPoint("TOPRIGHT", padding, padding)
 		elseif i == 3 then
 			border:SetTexCoord(0, 1/3, 2/3, 1)
-			border:SetPoint("BOTTOMLEFT", self, -(bL1 or 0), -(bL2 or 0))
+			border:SetPoint("BOTTOMLEFT", -padding, -padding)
 		elseif i == 4 then
 			border:SetTexCoord(2/3, 1, 2/3, 1)
-			border:SetPoint("BOTTOMRIGHT", self, bR1 or 0, -(bR2 or 0))
+			border:SetPoint("BOTTOMRIGHT", padding, -padding)
 		elseif i == 5 then
 			border:SetTexCoord(1/3, 2/3, 0, 1/3)
 			border:SetPoint("TOPLEFT", borders[1], "TOPRIGHT")
@@ -79,16 +78,16 @@ function CreateBorder(self, borderSize, R, G, B, ...)
 
 		if i == 1 then
 			shadow:SetTexCoord(0, 1/3, 0, 1/3) 
-			shadow:SetPoint("TOPLEFT", self, -(uL1 or 0)-space, (uL2 or 0)+space)
+			shadow:SetPoint("TOPLEFT", -padding-space, padding+space)
 		elseif i == 2 then
 			shadow:SetTexCoord(2/3, 1, 0, 1/3)
-			shadow:SetPoint("TOPRIGHT", self, (uR1 or 0)+space, (uR2 or 0)+space)
+			shadow:SetPoint("TOPRIGHT", padding+space, padding+space)
 		elseif i == 3 then
 			shadow:SetTexCoord(0, 1/3, 2/3, 1)
-			shadow:SetPoint("BOTTOMLEFT", self, -(bL1 or 0)-space, -(bL2 or 0)-space)
+			shadow:SetPoint("BOTTOMLEFT", -padding-space, -padding-space)
 		elseif i == 4 then
 			shadow:SetTexCoord(2/3, 1, 2/3, 1)
-			shadow:SetPoint("BOTTOMRIGHT", self, (bR1 or 0)+space, -(bR2 or 0)-space)
+			shadow:SetPoint("BOTTOMRIGHT", padding+space, -padding-space)
 		elseif i == 5 then
 			shadow:SetTexCoord(1/3, 2/3, 0, 1/3)
 			shadow:SetPoint("TOPLEFT", shadows[1], "TOPRIGHT")
